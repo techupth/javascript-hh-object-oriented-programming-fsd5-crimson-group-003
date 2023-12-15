@@ -40,6 +40,9 @@ class Comment {
     this.createdBy = createdBy;
     this.like = 0;
   }
+  addLike() {
+    this.like += 1;
+  }
 }
 
 class Facebook {
