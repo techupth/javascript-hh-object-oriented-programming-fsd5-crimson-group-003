@@ -1,20 +1,4 @@
 // Ex. 3
-class User {
-  constructor(id, name, email) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-  }
-}
-//Mynote สร้าง Object จากคลาส User
-const user1 = new User("101", "Leang N", "devrleange@gmail.com");
-console.log(user1);
-
-class Post {
-  constructor(title) {
-    this.title = title;
-  }
-}
 
 class PostList {
   constructor() {
@@ -22,39 +6,54 @@ class PostList {
   }
 
   addPost(post) {
-    this.posts.push(post);
+    this.posts.push({
+      id: this.posts.length + 1,
+      title: post.title,
+      content: post.content,
+      comments: post.comments,
+    });
   }
 
-  sharePost() {
-    this.posts.forEach((post) => {
-      console.log(`You've shared post "${post.title}" to your friend.`);
-    });
+  sharePost(postId) {
+    console.log(
+      `You've shared post "${this.posts[postId - 1].title}" to your friend.`
+    );
   }
 }
 
-// สร้าง Object จาก Class PostList
-const postList = new PostList();
-// เพิ่ม Post เข้าไปใน postList
-postList.addPost(new Post("First Post"));
-postList.addPost(new Post("Second Post"));
+class Post {
+  constructor(id, title, content) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.comments = [];
+  }
 
-// แสดงผล title ของ Post ทั้งหมดใน postList
-postList.sharePost();
+  addComment(comment) {
+    this.comments.push(comment);
+  }
+}
 
 class Comment {
-  constructor(id, content, createdBy, likes) {
+  constructor(id, content, createdBy) {
     this.id = id;
     this.content = content;
     this.createdBy = createdBy;
-    this.likes = 0;
+    this.like = 0;
   }
+
   addLike() {
-    this.likes += 1;
+    this.like = this.like + 1;
   }
 }
-const addlike1 = new Comment("1", "content test", "leang");
-addlike1.addLike(1);
-console.log(addlike1.likes); //***Leang Check again
+
+class User {
+  constructor(id, name, email) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+  }
+}
 
 class Facebook {
   constructor() {
@@ -88,9 +87,59 @@ class Notification {
     this.id = id;
   }
 
-  send(commentCreatedBy, postTitle) {
+  send(comment, post) {
     console.log(
-      `Notification: ${commentCreatedBy} has just commented on this post—"${postTitle}"`
+      `Notification: ${comment.createdBy.name} has just commented on this post—"${post.title}".`
     );
   }
 }
+
+// สร้าง User
+const john = new User(1, "John", "john@gmail.com");
+
+// สร้าง Post List
+const postList = new PostList();
+// สร้าง Post
+const firstPost = new Post(1, "My first post", "This is post content");
+
+// John สร้าง Comment
+const firstComment = new Comment(1, "My first comment", john);
+// เพิ่ม Like ของ Comment
+firstComment.addLike();
+firstComment.addLike();
+// ดู Like ของ Comment
+console.log(firstComment.like);
+
+// เพิ่ม Post เข้าไปใน PostList
+postList.addPost(firstPost);
+
+// ดูรายการ Post ทั้งหมด
+console.log(postList.posts);
+
+// เพิ่ม Comment เข้าไปใน Post
+firstPost.addComment(firstComment);
+
+// Share post ที่ีไอดีเป็น 1
+postList.sharePost(1);
+
+// สร้าง Facebook
+const facebook = new Facebook();
+
+// สร้าง Page
+const firstPage = new FacebookPage("My first page");
+
+// สร้าง Group
+const firstGroup = new FacebookGroup("My first group");
+// เพิ่ม firstPage เข้าไปใน Facebook
+facebook.addPage(firstPage);
+// เพิ่ม firstGroup เข้าไปใน Facebook
+facebook.addGroup(firstGroup);
+
+// ดูรายการ Facebook Page และ Facebook Group
+console.log(facebook.pageList);
+console.log(facebook.groupList);
+
+// สร้าง Notification
+const notification = new Notification(1);
+// ส่ง Notification
+notification.send(firstComment, firstPost);
